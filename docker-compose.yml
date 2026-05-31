@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: rbac_postgres
+    environment:
+      POSTGRES_DB: rbac_db
+      POSTGRES_USER: rbac_user
+      POSTGRES_PASSWORD: rbac_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - rbac_postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  rbac_postgres_data:
