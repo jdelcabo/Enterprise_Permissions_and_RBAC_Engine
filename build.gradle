@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'groovy'
+    id 'nu.studer.jooq' version '9.0'
 }
 
 group = 'com.rbac'
@@ -17,11 +18,57 @@ repositories {
 }
 
 dependencies {
+    // Groovy and Spock
     testImplementation 'org.codehaus.groovy:groovy:3.0.21'
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
     testRuntimeOnly    'org.junit.jupiter:junit-jupiter-engine:5.10.3'
     testRuntimeOnly    'org.junit.platform:junit-platform-launcher:1.10.3'
+
+    // jOOQ
+    implementation     'org.jooq:jooq:3.18.7'
+
+    // PostgresSQL JDBC Driver
+    implementation     'org.postgresql:postgresql:42.7.1' // The bridge between Java and PostgreSQL
+
+    // jOOQ code generator needs the JDBC driver at generation time too
+    jooqGenerator      'org.postgresql:postgresql:42.7.1'
+}
+
+// ── jOOQ Code Generation Configuration ───────────────────────────────────────
+jooq {
+    version = '3.18.7'
+
+    configurations {
+        main {
+            generationTool {
+                // Database connection for the generator to read your schema
+                jdbc {
+                    driver   = 'org.postgresql.Driver'
+                    url      = 'jdbc:postgresql://localhost:5432/rbac_db'
+                    user     = 'rbac_user'
+                    password = 'rbac_password'
+                }
+
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+
+                    database {
+                        name            = 'org.jooq.meta.postgres.PostgresDatabase'
+                        inputSchema     = 'public'
+                        // Generate classes for these tables only
+                        includes        = 'roles|permissions|role_permissions|role_inheritance'
+                    }
+
+                    target {
+                        // Where the generated Java classes will be placed
+                        packageName = 'com.rbac.generated'
+                        directory   = 'build/generated-src/jooq/main'
+                    }
+                }
+            }
+        }
+    }
 }
 
 test {
