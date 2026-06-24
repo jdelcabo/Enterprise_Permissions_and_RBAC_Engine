@@ -26,16 +26,25 @@ dependencies {
     testRuntimeOnly    'org.junit.platform:junit-platform-launcher:1.10.3'
 
     // jOOQ
-    implementation     'org.jooq:jooq:3.18.7'
+    implementation 'org.jooq:jooq:3.18.7'
 
     // PostgresSQL JDBC Driver
-    implementation     'org.postgresql:postgresql:42.7.1' // The bridge between Java and PostgreSQL
+    implementation 'org.postgresql:postgresql:42.7.1' // The bridge between Java and PostgreSQL
 
     // jOOQ code generator needs the JDBC driver at generation time too
-    jooqGenerator      'org.postgresql:postgresql:42.7.1'
+    jooqGenerator 'org.postgresql:postgresql:42.7.1'
+
+    // SparkJava — lightweight web framework
+    implementation 'com.sparkjava:spark-core:2.9.4'
+
+    // Gson — converts Java objects to/from JSON
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Needed for HTTP-level testing (calling our own running server)
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.3'
 }
 
-// ── jOOQ Code Generation Configuration ───────────────────────────────────────
+// jOOQ Code Generation Configuration
 jooq {
     version = '3.18.7'
 

@@ -94,4 +94,24 @@ class PermissionServiceSpec extends Specification {
         // from backend
         permissionService.hasPermission(fullstack, "edit_api")
     }
+
+    def "getAllPermissions should return every permission reachable through inheritance"() {
+        given:
+        Role intern = new Role("intern")
+        intern.addPermission("read_wiki")
+
+        Role employee = new Role("employee")
+        employee.addPermission("submit_expenses")
+        employee.addInheritance(intern)
+
+        Role manager = new Role("manager")
+        manager.addPermission("approve_budget")
+        manager.addInheritance(employee)
+
+        when:
+        Set<String> permissions = permissionService.getAllPermissions(manager)
+
+        then:
+        permissions == ["approve_budget", "submit_expenses", "read_wiki"] as Set
+    }
 }

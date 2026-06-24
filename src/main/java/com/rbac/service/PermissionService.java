@@ -41,4 +41,29 @@ public class PermissionService {
 
         return false;
     }
+
+    /**
+     * Collects every permission a role has access to, either directly
+     * or through any level of inheritance. Uses the same DFS traversal
+     * pattern as hasPermission, but accumulates results instead of
+     * short-circuiting on the first match.
+     */
+    public Set<String> getAllPermissions(Role role) {
+        Set<String> permissions = new HashSet<>();
+        collect(role, permissions, new HashSet<>());
+        return permissions;
+    }
+
+    private void collect(Role current, Set<String> permissions, Set<Role> visited) {
+        if (visited.contains(current)) {
+            return;
+        }
+        visited.add(current);
+
+        permissions.addAll(current.getPermissions());   // you'll need a getter for the raw set
+
+        for (Role parent : current.getInheritsFrom()) {
+            collect(parent, permissions, visited);
+        }
+    }
 }
