@@ -35,4 +35,8 @@ public class Role {
     public Set<Role> getInheritsFrom() {
         return inheritsFrom;
     }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
 }
