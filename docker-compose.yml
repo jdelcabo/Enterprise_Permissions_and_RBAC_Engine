@@ -1,6 +1,11 @@
 version: '3.8'
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: rbac_redis
+    ports:
+      - "6379:6379"
   postgres:
     image: postgres:15
     container_name: rbac_postgres
@@ -13,6 +18,16 @@ services:
     volumes:
       - rbac_postgres_data:/var/lib/postgresql/data
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-
+  app:
+    build: .
+    container_name: rbac_app
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "4567:4567"
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
 volumes:
   rbac_postgres_data:

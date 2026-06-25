@@ -4,7 +4,7 @@ import com.rbac.model.Role;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PermissionService {
+public class PermissionService implements PermissionChecker {
 
     /**
      * Checks whether a role has a given permission,
