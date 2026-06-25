@@ -2,6 +2,7 @@ package com.rbac.web;
 
 import com.google.gson.Gson;
 import com.rbac.model.Role;
+import com.rbac.service.PermissionChecker;
 import com.rbac.service.PermissionService;
 import com.rbac.service.RoleHierarchy;
 import spark.Request;
@@ -16,11 +17,11 @@ import java.util.Map;
 public class App {
 
     private final RoleHierarchy hierarchy;
-    private final PermissionService permissionService;
+    private final PermissionChecker permissionService;
     private final Gson gson = new Gson();
     private final Service http;
 
-    public App(RoleHierarchy hierarchy, PermissionService permissionService, int port) {
+    public App(RoleHierarchy hierarchy, PermissionChecker permissionService, int port) {
         this.hierarchy = hierarchy;
         this.permissionService = permissionService;
         this.http = Service.ignite().port(port);
